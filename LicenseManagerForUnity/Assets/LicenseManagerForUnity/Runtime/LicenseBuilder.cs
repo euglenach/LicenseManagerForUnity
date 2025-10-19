@@ -1,5 +1,9 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace LicenseManagerForUnity
 {
@@ -9,6 +13,7 @@ namespace LicenseManagerForUnity
         [SerializeField] private LicenseData[] licenseList;
         [SerializeField] private string libraryNameBracketStart, libraryNameBracketEnd;
         [SerializeField] private string librarySeparator;
+        [SerializeField] private TextAsset outputFile;
         private readonly StringBuilder textBuilder = new();
 
         public string Build()
@@ -31,6 +36,19 @@ namespace LicenseManagerForUnity
             }
 
             return textBuilder.ToString();
+        }
+        
+        public void ExportToFile(TextAsset file)
+        {
+            if(file == null) return;
+            
+            var textPath = AssetDatabase.GetAssetPath(file);
+            if(string.IsNullOrEmpty(textPath)) return;
+            
+            File.WriteAllText(textPath, Build());
+            
+            AssetDatabase.ImportAsset(textPath);
+            AssetDatabase.Refresh();
         }
         
 #if UNITY_EDITOR
