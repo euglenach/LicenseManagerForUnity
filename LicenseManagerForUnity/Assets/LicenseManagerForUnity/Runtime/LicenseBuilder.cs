@@ -38,6 +38,7 @@ namespace LicenseManagerForUnity
             return textBuilder.ToString();
         }
         
+#if UNITY_EDITOR
         public void ExportToFile(TextAsset file)
         {
             if(file == null) return;
@@ -49,10 +50,7 @@ namespace LicenseManagerForUnity
             
             AssetDatabase.ImportAsset(textPath);
             AssetDatabase.Refresh();
-        }
-        
-#if UNITY_EDITOR
-        
+        }        
 #endif
     }
 }
